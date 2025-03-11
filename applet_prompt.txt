@@ -1,18 +1,16 @@
-Tom has a rectangular garden that measures 8 meters in length and 6 meters in width. He wants to put a fence around the entire garden. How many meters of fencing does Tom need?
+Imagine you have a small bookshelf and start with 5 books. Every month, you add 3 new books to your collection. How many books will you have after 6 months?
 
-Hint:
-
-Find the perimeter of the rectangle, which is the total distance around the garden.
 Solution:
 
-Use the formula for the perimeter of a rectangle:
-[
-\text{Perimeter} = 2 \times (\text{Length} + \text{Width})
-]
+Start with the initial number of books:
 
-Substitute the given values:
-[
-\text{Perimeter} = 2 \times (8 \text{ meters} + 6 \text{ meters}) = 2 \times 14 \text{ meters} = 28 \text{ meters}
-]
+Initially, you have 5 books.
+Add 3 books each month:
 
-Tom needs 28 meters of fencing to go around his garden.
+Month 1: (5 + 3 = 8)
+Month 2: (8 + 3 = 11)
+Month 3: (11 + 3 = 14)
+Month 4: (14 + 3 = 17)
+Month 5: (17 + 3 = 20)
+Month 6: (20 + 3 = 23)
+After 6 months, you will have 23 books.
