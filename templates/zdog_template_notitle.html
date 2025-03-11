@@ -610,10 +610,34 @@
       });
       
       // Data
-      const givenItems = JSON.parse('{{given_items}}');
-      const toFindItems = JSON.parse('{{tofind_items}}');
-      const computeSteps = JSON.parse('{{compute_steps}}');
-      const connectQuestions = JSON.parse('{{connect_questions}}');
+      let givenItems = [];
+      let toFindItems = [];
+      let computeSteps = [];
+      let connectQuestions = [];
+      
+      try {
+        givenItems = JSON.parse('{{given_items}}' || '[]');
+      } catch (e) {
+        console.error('Error parsing given items:', e);
+      }
+      
+      try {
+        toFindItems = JSON.parse('{{tofind_items}}' || '[]');
+      } catch (e) {
+        console.error('Error parsing to-find items:', e);
+      }
+      
+      try {
+        computeSteps = JSON.parse('{{compute_steps}}' || '[]');
+      } catch (e) {
+        console.error('Error parsing compute steps:', e);
+      }
+      
+      try {
+        connectQuestions = JSON.parse('{{connect_questions}}' || '[]');
+      } catch (e) {
+        console.error('Error parsing connect questions:', e);
+      }
       
       // Zdog initialization and rendering
       function initZdogScene(sceneKey) {
