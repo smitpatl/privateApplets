@@ -659,21 +659,23 @@ Create scenes showing """ + str(count) + """ small cubes with """ + str(size) + 
 - Use isometric projection (30 degrees angles) for proper 3D
 """
     elif viz_type == "box_height":
-        viz_specific_guidance = f"""
+        # Use regular string instead of f-string to avoid backslash issues
+        viz_specific_guidance = """
 Create scenes showing a rectangular box/prism with focus on finding its height.
 - Make this visualization UNIQUE and specific to this problem - NOT generic
 - Show the box with clear dimensions for length and width
 - Use visual indicators to show that height is the unknown dimension
 - Create progressive scenes that demonstrate the formula and calculation
 - Use Box elements with wireframe overlays for clear edges
-- Include appropriate formula visualization: Height = Volume ÷ (Length × Width)
+- Include appropriate formula visualization: Height = Volume divided by (Length x Width)
 - Show the calculation process visually in the compute steps
 - Use clear color coding to distinguish different dimensions
 - Include a transition showing the height being calculated/revealed
 - Use isometric projection for proper 3D visualization
 """
     elif viz_type == "cylinder_volume":
-        viz_specific_guidance = f"""
+        # Use regular string instead of f-string to avoid backslash issues
+        viz_specific_guidance = """
 Create scenes showing a cylinder with focus on its volume calculation.
 - Make this visualization UNIQUE and specific to this problem - NOT generic
 - Show the cylinder with clear radius and height measurements
@@ -686,21 +688,22 @@ Create scenes showing a cylinder with focus on its volume calculation.
 - Use appropriate scale to make all elements clearly visible
 """
     elif viz_type == "rectangular_prism" or viz_type == "box_volume":
-        viz_specific_guidance = f"""
+        # Use regular string instead of f-string to avoid backslash issues
+        viz_specific_guidance = """
 Create scenes showing a rectangular prism/box with focus on volume calculation.
 - Make this visualization UNIQUE and specific to this problem - NOT generic
 - Show the box with clear dimensions for length, width, and height
 - Use Box elements with wireframe overlays for clear edges
-- Include appropriate volume formula visualization: V = length × width × height
+- Include appropriate volume formula visualization: V = length x width x height
 - Create progressive scenes that demonstrate the formula and calculation
 - Use clear color coding to distinguish different dimensions
 - Include layer-by-layer building or decomposition in one of the scenes
 - Use isometric projection for proper 3D visualization
 """
     else:
-        # Generic guidance for other visualization types
-        viz_specific_guidance = f"""
-Create scenes specific to the "{viz_type}" visualization type.
+        # Generic guidance for other visualization types - using concatenation instead of f-string
+        viz_specific_guidance = """
+Create scenes specific to the \"""" + viz_type + """\" visualization type.
 - Make this visualization UNIQUE and specific to this problem - NOT generic
 - Customize the visualization to perfectly match the problem context
 - Create progressive scenes that demonstrate the concept clearly
