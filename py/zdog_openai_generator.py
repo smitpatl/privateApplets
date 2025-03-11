@@ -232,15 +232,26 @@ def extract_parameters_with_openai(problem_text, api_key=None):
         if DEBUG:
             print(f"Calling OpenAI API to extract parameters from: {problem_text[:100]}...")
             
-        system_prompt = """You are a mathematical problem analyzer specialized in extracting numerical parameters and visualization types from problem text.
-Your task is to extract all numeric values, counts, sizes, and to identify what type of visualization would be most appropriate.
-Output ONLY valid JSON with the following schema:
+        system_prompt = """You are a mathematical problem analyzer specialized in extracting parameters for visualizations.
+Your task is to extract all numeric values, counts, sizes, and identify the most appropriate visualization type.
+
+Choose the visualization type from these categories:
+1. 3D GEOMETRIC: cubes_to_larger_cube, cylinder_volume, box_height, box_volume, rectangular_prism, 
+   cone_volume, sphere_volume, container_volume, stacked_cubes
+2. ALGEBRAIC (2D): algebra_equation, linear_equation, quadratic_function, equation_system
+3. STATISTICAL (2D): statistics_basic, histogram, bar_chart, pie_chart, scatter_plot
+4. PROBABILITY: probability_basic, probability_events
+5. FRACTION/RATIO: fraction_visual
+6. RATE/TIME: rate_and_time
+
+Output ONLY valid JSON with this schema:
 {
-  "visualization_type": "string (e.g., cubes_to_larger_cube, cylinder_volume, etc.)",
+  "visualization_type": "string (from categories above)",
   "parameters": {
     "count": integer or null,
     "size": number or null,
     "colors": [string] or null,
+    "dimension": "2d" or "3d" or null,
     "other_relevant_params": any
   }
 }
@@ -332,36 +343,82 @@ def select_visualization_type(parameters, problem_text=None):
     # If not explicitly provided, try to infer a better type from the problem text
     if viz_type == "default" and problem_text:
         # Extract problem characteristics to determine appropriate visualization
-        if problem_text:
-            # Check for different geometric and problem patterns
-            if any(keyword in problem_text.lower() for keyword in ["box", "rectangular prism", "cuboid"]):
-                if any(keyword in problem_text.lower() for keyword in ["height", "find the height"]):
-                    return "box_height"
-                elif any(keyword in problem_text.lower() for keyword in ["volume", "capacity"]):
-                    return "box_volume"
-                else:
-                    return "rectangular_prism"
-            
-            elif any(keyword in problem_text.lower() for keyword in ["cylinder", "tube", "pipe"]):
-                return "cylinder_volume"
-            
-            elif any(keyword in problem_text.lower() for keyword in ["cone", "pyramid"]):
-                return "cone_volume"
-            
-            elif any(keyword in problem_text.lower() for keyword in ["sphere", "ball"]):
-                return "sphere_volume"
-            
-            elif any(keyword in problem_text.lower() for keyword in ["pool", "tank", "container", "aquarium"]):
-                return "container_volume"
-            
-            elif any(keyword in problem_text.lower() for keyword in ["cubes", "blocks", "stack"]):
-                if "larger cube" in problem_text.lower():
-                    return "cubes_to_larger_cube"
-                else:
-                    return "stacked_cubes"
+        problem_lower = problem_text.lower()
+        
+        # GEOMETRIC/SPATIAL VISUALIZATIONS
+        if any(keyword in problem_lower for keyword in ["box", "rectangular prism", "cuboid"]):
+            if any(keyword in problem_lower for keyword in ["height", "find the height"]):
+                return "box_height"
+            elif any(keyword in problem_lower for keyword in ["volume", "capacity"]):
+                return "box_volume"
+            else:
+                return "rectangular_prism"
+        
+        elif any(keyword in problem_lower for keyword in ["cylinder", "tube", "pipe"]):
+            return "cylinder_volume"
+        
+        elif any(keyword in problem_lower for keyword in ["cone", "pyramid"]):
+            return "cone_volume"
+        
+        elif any(keyword in problem_lower for keyword in ["sphere", "ball"]):
+            return "sphere_volume"
+        
+        elif any(keyword in problem_lower for keyword in ["pool", "tank", "container", "aquarium"]):
+            return "container_volume"
+        
+        elif any(keyword in problem_lower for keyword in ["cubes", "blocks", "stack"]):
+            if "larger cube" in problem_lower:
+                return "cubes_to_larger_cube"
+            else:
+                return "stacked_cubes"
+        
+        # ALGEBRAIC VISUALIZATIONS
+        elif any(keyword in problem_lower for keyword in ["equation", "solve for", "variable", "find x", "find y"]):
+            return "algebra_equation"
+        
+        elif any(keyword in problem_lower for keyword in ["linear", "slope", "intercept", "line equation"]):
+            return "linear_equation"
+        
+        elif any(keyword in problem_lower for keyword in ["parabola", "quadratic"]):
+            return "quadratic_function"
+        
+        elif any(keyword in problem_lower for keyword in ["system", "simultaneous equations"]):
+            return "equation_system"
+        
+        # STATISTICAL VISUALIZATIONS
+        elif any(keyword in problem_lower for keyword in ["mean", "median", "mode", "average", "standard deviation"]):
+            return "statistics_basic"
+        
+        elif any(keyword in problem_lower for keyword in ["histogram", "frequency", "distribution"]):
+            return "histogram"
+        
+        elif any(keyword in problem_lower for keyword in ["bar graph", "bar chart"]):
+            return "bar_chart"
+        
+        elif any(keyword in problem_lower for keyword in ["pie chart", "percentage", "proportion"]):
+            return "pie_chart"
+        
+        elif any(keyword in problem_lower for keyword in ["scatter plot", "correlation"]):
+            return "scatter_plot"
+        
+        # PROBABILITY VISUALIZATIONS
+        elif any(keyword in problem_lower for keyword in ["probability", "chance", "likelihood", "odds"]):
+            return "probability_basic"
+        
+        elif any(keyword in problem_lower for keyword in ["dice", "coin", "card", "random"]):
+            return "probability_events"
+        
+        # FRACTION/RATIO VISUALIZATIONS
+        elif any(keyword in problem_lower for keyword in ["fraction", "ratio", "proportion", "part of"]):
+            return "fraction_visual"
+        
+        # TIME-BASED VISUALIZATIONS
+        elif any(keyword in problem_lower for keyword in ["rate", "speed", "velocity", "time", "distance"]):
+            return "rate_and_time"
     
     # Map to actual implementation types
     type_map = {
+        # 3D Geometric types
         "cubes_to_larger_cube": "cubes_to_larger_cube",
         "cube_transformation": "cubes_to_larger_cube",
         "cylinder_volume": "cylinder_volume",
@@ -372,6 +429,31 @@ def select_visualization_type(parameters, problem_text=None):
         "sphere_volume": "sphere_volume",
         "container_volume": "container_volume",
         "stacked_cubes": "stacked_cubes",
+        
+        # Algebraic types (mainly 2D)
+        "algebra_equation": "algebra_equation",
+        "linear_equation": "linear_equation",
+        "quadratic_function": "quadratic_function",
+        "equation_system": "equation_system",
+        
+        # Statistical types (mainly 2D)
+        "statistics_basic": "statistics_basic",
+        "histogram": "histogram",
+        "bar_chart": "bar_chart",
+        "pie_chart": "pie_chart",
+        "scatter_plot": "scatter_plot",
+        
+        # Probability types (mix of 2D/3D)
+        "probability_basic": "probability_basic",
+        "probability_events": "probability_events",
+        
+        # Fraction/ratio types
+        "fraction_visual": "fraction_visual",
+        
+        # Rate/time types
+        "rate_and_time": "rate_and_time",
+        
+        # Default type
         "default": "general_3d_scene"  # More neutral default
     }
     
@@ -380,24 +462,63 @@ def select_visualization_type(parameters, problem_text=None):
 def generate_zdog_scenes_with_openai(visualization_text, api_key=None):
     """Generate unique Zdog scenes using OpenAI directly for each problem."""
     try:
+        # Initialize with sensible defaults to prevent None-related errors later
+        visualization_params = {
+            "visualization_type": "general_3d_scene",
+            "parameters": {
+                "count": 5,
+                "size": 5,
+                "colors": ["#f47983", "#5b9bd5", "#6aa84f"],
+                "shapes": ["box", "sphere", "cylinder"],
+                "structure": "educational"
+            }
+        }
+        
         # Try to use existing parameters if available, or extract from text
         if 'visualization_params' in visualization_text and 'visualization_type' in visualization_text:
-            visualization_params = {
-                "visualization_type": visualization_text["visualization_type"],
-                "parameters": visualization_text["visualization_params"]
-            }
-            if DEBUG:
-                print(f"Using existing parameters: {visualization_params}")
-        else:
-            # Extract parameters from the question text and given information
-            question_text = visualization_text.get('comprehend', {}).get('question', '')
-            given_text = ", ".join(visualization_text.get('comprehend', {}).get('given', []))
-            full_text = f"{question_text} {given_text}"
+            try:
+                # Attempt to use existing parameters but keep defaults as fallback
+                if visualization_text["visualization_type"]:
+                    visualization_params["visualization_type"] = visualization_text["visualization_type"]
+                
+                if isinstance(visualization_text["visualization_params"], dict):
+                    # Merge with defaults rather than replacing entirely
+                    visualization_params["parameters"].update(visualization_text["visualization_params"])
+                    
+                if DEBUG:
+                    print(f"Using existing parameters (with defaults): {visualization_params}")
+            except Exception as e:
+                print(f"Error processing existing visualization parameters: {e}. Using extracted parameters.")
+                # Continue to extraction since existing parameters had issues
+        
+        # Extract parameters from the question text and given information regardless
+        # This ensures we always have rich context for scene generation
+        question_text = visualization_text.get('comprehend', {}).get('question', '')
+        given_text = ", ".join(visualization_text.get('comprehend', {}).get('given', []))
+        tofind_text = ", ".join(visualization_text.get('comprehend', {}).get('tofind', []))
+        
+        # Create a richer context with all available information
+        full_text = f"Question: {question_text}\nGiven: {given_text}\nTo Find: {tofind_text}"
+        
+        # Use OpenAI to extract parameters
+        if DEBUG:
+            print(f"Extracting parameters from text: {full_text[:100]}...")
+        
+        try:
+            extracted_params = extract_parameters_with_openai(full_text, api_key)
             
-            # Use OpenAI to extract parameters
-            if DEBUG:
-                print(f"Extracting parameters from text: {full_text[:100]}...")
-            visualization_params = extract_parameters_with_openai(full_text, api_key)
+            # Merge extracted parameters with defaults if extraction succeeded
+            if extracted_params and extracted_params.get("visualization_type"):
+                visualization_params["visualization_type"] = extracted_params["visualization_type"]
+            
+            if extracted_params and extracted_params.get("parameters"):
+                # Only update non-None values from extraction
+                for key, value in extracted_params["parameters"].items():
+                    if value is not None:
+                        visualization_params["parameters"][key] = value
+        except Exception as e:
+            print(f"Error during parameter extraction: {e}. Using default parameters.")
+            # Continue with default parameters already initialized
         
         # Select visualization type with problem context
         visualization_type = select_visualization_type(visualization_params, full_text)
@@ -564,11 +685,24 @@ def generate_zdog_scenes_with_api(visualization_text, viz_params, api_key=None):
     
     if DEBUG:
         print("Preparing API call for Zdog scene generation...")
+    
+    # Ensure viz_params is valid to prevent NoneType errors later
+    if not viz_params or not isinstance(viz_params, dict):
+        viz_params = {
+            "visualization_type": "general_3d_scene",
+            "parameters": {
+                "count": 5,
+                "size": 5,
+                "colors": ["#f47983", "#5b9bd5", "#6aa84f"]
+            }
+        }
         
     # Create a comprehensive system prompt with explicit structure requirements - using a raw string to avoid f-string issues
-    system_prompt = r"""You are a 3D graphics expert specializing in converting mathematical problems into Zdog scene configurations.
-Your task is to create UNIQUE Zdog scenes that visualize mathematical concepts for educational purposes.
-Each visualization should be customized specifically for the individual problem, NOT a generic template.
+    system_prompt = r"""You are a visualization expert specializing in converting mathematical problems into Zdog scene configurations.
+Your task is to create HYPER-CONTEXTUAL Zdog scenes that visualize mathematical concepts for educational purposes.
+Each visualization must directly relate to the specific numerical values and context in the problem - NOT a generic template.
+
+Zdog can create both 3D and 2D visualizations. While it's primarily a 3D library, it excels at creating pseudo-3D and 2D graphics that are clear and engaging.
 
 Output ONLY valid JSON for Zdog scenes with this schema:
 {
@@ -631,15 +765,24 @@ WARNING: Do not use Text type shapes, as Zdog does not support text. Instead, us
 Valid Zdog shapes types are: Anchor, Box, Cone, Cylinder, Ellipse, Group, Hemisphere, Polygon, Rect, RoundedRect, Shape.
 
 IMPORTANT VISUAL REQUIREMENTS:
-- Create a UNIQUE visualization that specifically matches the problem context
-- DO NOT use generic templates - each problem deserves its own custom visualization
+- Create a HYPER-CONTEXTUAL visualization that directly represents the problem's specific values
+- Scenes should visually tell the story of the problem with specific numbers and context from the problem
+- Adapt visualization dimensionality to the problem type:
+  * Use FULL 3D for geometric/spatial problems (cubes, cylinders, etc.)
+  * Use 2D or 2.5D for algebraic, statistical, or abstract problems
+  * For 2D: Set z values to 0, use flat shapes (Rect, Ellipse, Polygon) and work in the XY plane
+  * For 2.5D: Use minimal depth with small z-offsets for layering and subtle depth cues
+- For 2D visualizations:
+  * Create graph-like structures, charts, number lines or coordinate planes when appropriate
+  * Use Shape paths to create lines, curves, and custom 2D shapes (like fraction bars, brackets)
+  * Set isometric to false and use flat perspective for purely 2D scenes
+- Prefer simpler, clearer visualization over complex 3D when appropriate for the problem
 - Use Groups and nested structures for complex elements
-- DO NOT include reference grid or axes - keep the visualization clean
 - Add transition elements like arrows between scenes
-- Use appropriate text labels in each scene
-- Ensure cubes have BOTH solid fill AND wireframe overlay for clear edges
+- Use appropriate labels and indicators to highlight key values
+- Ensure all 3D shapes have BOTH solid fill AND wireframe overlay for clear edges
 - Be creative with colors and layouts to make the visualization engaging and educational
-- Configure the global settings with dragRotate: false, isometric: true
+- Configure the global settings appropriately (dragRotate: false, isometric: true for 3D, false for 2D)
 """
     
     # Extract all available context from visualization_text with proper None handling
@@ -807,7 +950,7 @@ Return ONLY a valid JSON object with global settings and scenes.
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt}
             ],
-            temperature=0.3,
+            temperature=0.5,  # Increased temperature for more creative and contextual visualizations
             max_completion_tokens=4000
         )
         
