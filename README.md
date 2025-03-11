@@ -63,27 +63,12 @@ When you commit your changes to `applet_data.csv`:
 4. The public index page is automatically updated
 5. The applet becomes available on the GitHub Pages site
 
-## Required Repository Secrets
-
-For this workflow to function, the following secrets must be configured in the repository:
-
-1. **OPENAI_API_KEY**: Your OpenAI API key for generating visualizations
-2. **GH_PAT**: A GitHub Personal Access Token for pushing to the public repository
-
-### Setting Up the PAT (Personal Access Token)
-
-1. Log in to GitHub and go to your account settings
-2. Navigate to Developer Settings > Personal access tokens > Generate new token
-3. Give it a descriptive name like "Applet Generator"
-4. Select the "repo" scope to allow pushing to repositories
-5. Click "Generate token" and copy the token value
-6. Add it as a repository secret named `GH_PAT` in this repository's settings
-
 ## Troubleshooting
 
 - If the applet generation fails, check the GitHub Actions logs for details
 - Common issues:
   - Missing or invalid OpenAI API key
+  - Invalid Output from OpenAI
   - Invalid CSV format (make sure columns and rows are properly formatted)
   - Network or permission issues when pushing to the public repository
   
