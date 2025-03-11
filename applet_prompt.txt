@@ -1,4 +1,4 @@
-A toy manufacturer wants to create a large display cube using smaller metal cubes. Each small cube has edges that are 2 cm long. How many of these small cubes would be needed to build a larger cube with edges of 10 cm?
+A sculpture manufacturer wants to create a large display cube using smaller metal cubes. Each small cube has edges that are 2 cm long. How many of these small cubes would be needed to build a larger cube with edges of 10 cm?
 
 In the process of constructing this display:
 1. First determine how many small cubes will fit along each edge of the large cube.
