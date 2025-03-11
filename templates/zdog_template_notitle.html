@@ -616,27 +616,31 @@
       let connectQuestions = [];
       
       try {
-        givenItems = JSON.parse('{{given_items}}' || '[]');
+        givenItems = JSON.parse('{{given_items}}');
       } catch (e) {
         console.error('Error parsing given items:', e);
+        givenItems = [];
       }
       
       try {
-        toFindItems = JSON.parse('{{tofind_items}}' || '[]');
+        toFindItems = JSON.parse('{{tofind_items}}');
       } catch (e) {
         console.error('Error parsing to-find items:', e);
+        toFindItems = [];
       }
       
       try {
-        computeSteps = JSON.parse('{{compute_steps}}' || '[]');
+        computeSteps = JSON.parse('{{compute_steps}}');
       } catch (e) {
         console.error('Error parsing compute steps:', e);
+        computeSteps = [];
       }
       
       try {
-        connectQuestions = JSON.parse('{{connect_questions}}' || '[]');
+        connectQuestions = JSON.parse('{{connect_questions}}');
       } catch (e) {
         console.error('Error parsing connect questions:', e);
+        connectQuestions = [];
       }
       
       // Zdog initialization and rendering
@@ -1375,9 +1379,14 @@
         
         // Get titles from data if available, otherwise use defaults
       try {
-          // Use string replace to safely handle apostrophes and quotes
-          const checkStepsJSON = '{{check_steps}}'.replace(/'/g, "\\'").replace(/\\"/g, '\\\\"');
-          const checkSteps = checkStepsJSON ? JSON.parse(checkStepsJSON) : [];
+          // Use a safer approach to parse the JSON
+          let checkSteps = [];
+          try {
+            checkSteps = JSON.parse('{{check_steps}}');
+          } catch (parseError) {
+            console.warn("Error directly parsing check steps JSON, using empty array:", parseError);
+            checkSteps = [];
+          }
           if (checkSteps && checkSteps.length > 0 && checkSteps.filter(step => step).length > 0) {
             // Use the title corresponding to the scene index, or the last one if not enough titles
             const titleIndex = Math.min(sceneIndex - 1, checkSteps.length - 1);
