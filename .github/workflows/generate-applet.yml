@@ -13,6 +13,8 @@ jobs:
     steps:
       - name: Checkout private repository
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Fetch all history for proper git diff
       
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -25,7 +27,13 @@ jobs:
           pip install openai jsonschema
       
       - name: Generate applet
-        run: python generate_and_deploy.py
+        run: |
+          # Check if applet_prompt.txt was changed and force regeneration if so
+          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q "applet_prompt.txt"; then
+            echo "Prompt file was changed, forcing regeneration from prompt"
+            python prompt_to_csv.py
+          fi
+          python generate_and_deploy.py
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       
