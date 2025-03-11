@@ -1,7 +1,19 @@
-A circus props manufacturer wants to create a large display cube using smaller metal cubes. Each small cube has edges that are 2 cm long. How many of these small cubes would be needed to build a larger cube with edges of 10 cm?
+Sarah has 3 boxes of crayons. Each box contains 15 crayons. She decides to give the same number of crayons to each of her 5 friends. How many crayons does each friend get?
 
-In the process of constructing this display:
-1. First determine how many small cubes will fit along each edge of the large cube.
-2. Calculate the total number of small cubes needed to fill the entire volume of the large cube.
-3. Verify the result by checking that the volume of all small cubes equals the volume of the large cube.
-4. Determine what fraction of the total volume each small cube represents!
+Hint:
+
+First, find out how many crayons Sarah has in total.
+Then, divide that number by the number of friends she is giving them to.
+Solution:
+
+Calculate the total number of crayons:
+[
+3 \text{ boxes} \times 15 \text{ crayons per box} = 45 \text{ crayons}
+]
+
+Divide the total number of crayons by the number of friends:
+[
+\frac{45 \text{ crayons}}{5 \text{ friends}} = 9 \text{ crayons per friend}
+]
+
+Therefore, each friend gets 9 crayons.
