@@ -1374,9 +1374,9 @@
         const checkStepTitle = document.getElementById('checkStepTitle');
         
         // Get titles from data if available, otherwise use defaults
-        try {
-          const checkSteps = JSON.parse('{{check_steps}}');
-          if (checkSteps && checkSteps.length > 0) {
+      try {
+          const checkSteps = JSON.parse('{{check_steps}}' || '[]');
+          if (checkSteps && checkSteps.length > 0 && checkSteps.filter(step => step).length > 0) {
             // Use the title corresponding to the scene index, or the last one if not enough titles
             const titleIndex = Math.min(sceneIndex - 1, checkSteps.length - 1);
             checkStepTitle.textContent = checkSteps[titleIndex] || `Check Step ${sceneIndex}`;

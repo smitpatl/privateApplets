@@ -614,26 +614,28 @@ IMPORTANT VISUAL REQUIREMENTS:
 - Configure the global settings with dragRotate: false, isometric: true
 """
     
-    # Extract all available context from visualization_text
-    question_text = visualization_text.get('comprehend', {}).get('question', '')
-    given_items = visualization_text.get('comprehend', {}).get('given', [])
-    given_text = ", ".join(given_items)
-    tofind_items = visualization_text.get('comprehend', {}).get('tofind', [])
-    tofind_text = ", ".join(tofind_items)
-    compute_steps = visualization_text.get('compute', {}).get('steps', [])
-    compute_text = "\n".join(compute_steps)
-    connect_questions = visualization_text.get('connect', {}).get('questions', [])
+    # Extract all available context from visualization_text with proper None handling
+    question_text = visualization_text.get('comprehend', {}).get('question', '') or ''
+    given_items = visualization_text.get('comprehend', {}).get('given', []) or []
+    given_text = ", ".join(given_items) if given_items else ""
+    tofind_items = visualization_text.get('comprehend', {}).get('tofind', []) or []
+    tofind_text = ", ".join(tofind_items) if tofind_items else ""
+    compute_steps = visualization_text.get('compute', {}).get('steps', []) or []
+    compute_text = "\n".join(compute_steps) if compute_steps else ""
+    connect_questions = visualization_text.get('connect', {}).get('questions', []) or []
     connect_text = ""
     
     # Format connect questions if available
     if connect_questions:
         connect_text = "Connect Questions:\n"
         for i, q in enumerate(connect_questions):
-            connect_text += str(i+1) + ". " + q.get('question', '') + "\n"
-            connect_text += "   Correct: " + q.get('correct', '') + "\n"
+            question = q.get('question', '') or ''
+            correct = q.get('correct', '') or ''
+            connect_text += str(i+1) + ". " + question + "\n"
+            connect_text += "   Correct: " + correct + "\n"
     
     # Extract final answer if available
-    final_answer = visualization_text.get('check', {}).get('final_answer', '')
+    final_answer = visualization_text.get('check', {}).get('final_answer', '') or ''
     
     # Create specific type guidance based on visualization type
     viz_type = viz_params.get("visualization_type", "cubes_to_larger_cube")
