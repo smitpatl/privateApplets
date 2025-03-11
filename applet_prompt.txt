@@ -16,4 +16,4 @@ Divide the total number of crayons by the number of friends:
 \frac{45 \text{ crayons}}{5 \text{ friends}} = 9 \text{ crayons per friend}
 ]
 
-Therefore, each friend gets 9 crayons.
+Therefore, each friend gets 9 crayons
