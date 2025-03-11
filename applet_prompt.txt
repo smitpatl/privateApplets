@@ -1,35 +1,7 @@
-MATH CONCEPT PROMPT
---------------------
+A toy manufacturer wants to create a large display cube using smaller metal cubes. Each small cube has edges that are 2 cm long. How many of these small cubes would be needed to build a larger cube with edges of 10 cm?
 
-GRADE LEVEL: 5th grade
-
-CONCEPT: Measurement conversion and volume calculation for irregular shapes
-
-LEARNING OBJECTIVES:
-- Understand how to convert between different units of volume
-- Apply volume formulas to solve real-world problems
-- Visualize how liquid volume transforms between different containers
-
-QUESTION/PROMPT:
-An aquarium tank is 60 cm long, 30 cm wide, and 45 cm high. If water fills 80% of the tank's volume, how many liters of water are in the tank? (Note: 1 liter = 1000 cubic centimeters)
-
-HINTS FOR SOLUTION:
-- Calculate the total volume of the aquarium in cubic centimeters (V = l × w × h)
-- Find 80% of the total volume
-- Convert the volume from cubic centimeters to liters
-
-CONNECT QUESTIONS:
-1. Which formula should be used to find the volume of a rectangular tank?
-   CORRECT: V = length × width × height
-   WRONG: V = length + width + height
-   WRONG: V = 2(length + width + height)
-   WRONG: V = π × radius² × height
-
-2. How many cubic centimeters equal 1 liter?
-   CORRECT: 1000 cubic centimeters
-   WRONG: 100 cubic centimeters
-   WRONG: 10 cubic centimeters
-   WRONG: 10000 cubic centimeters
-
-ADDITIONAL NOTES:
-This problem helps students understand volume measurement in the context of a real-world scenario. The visualization should show the aquarium tank with water filling 80% of its volume, with clear dimensions labeled. Including a visual representation of the conversion between cubic centimeters and liters would reinforce the relationship between these units. Consider showing both the empty tank and the partially filled tank to help students visualize the concept of partial volume
+In the process of constructing this display:
+1. First determine how many small cubes will fit along each edge of the large cube.
+2. Calculate the total number of small cubes needed to fill the entire volume of the large cube.
+3. Verify the result by checking that the volume of all small cubes equals the volume of the large cube.
+4. Determine what fraction of the total volume each small cube represents.
