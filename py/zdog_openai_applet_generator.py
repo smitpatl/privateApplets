@@ -13,13 +13,13 @@ import re
 import argparse
 from pathlib import Path
 
-# Import Zdog OpenAI generator
-from zdog_openai_generator import generate_zdog_scenes_for_html, extract_visualization_text
-from zdog_applet_generator import read_csv_file, extract_items, process_connect_questions
+# Import Zdog generators from current package
+from .zdog_openai_generator import generate_zdog_scenes_for_html, extract_visualization_text
+from .zdog_applet_generator import read_csv_file, extract_items, process_connect_questions
 
-# Directory constants
-TEMPLATE_DIR = "templates"
-JS_DIR = "js"
+# Directory constants - relative to parent directory
+TEMPLATE_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "templates")
+JS_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "js")
 OUTPUT_DIR = "output"
 
 def generate_zdog_openai_applet(csv_file, output_file=None, api_key=None):
@@ -87,6 +87,9 @@ def generate_zdog_openai_applet(csv_file, output_file=None, api_key=None):
     # Replace template variables
     html = template.replace('{{title}}', content.get('title', 'Interactive 3D Applet'))
     html = html.replace('{{question_text}}', content.get('question_text', ''))
+    
+    # Update JS paths to point to parent directory
+    html = html.replace('js/zdog.dist.min.js', '../js/zdog.dist.min.js')
     
     # Add Zdog scenes JSON
     html = html.replace('{{zdog_scenes_json}}', zdog_scenes_json)

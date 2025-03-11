@@ -29,7 +29,7 @@ client = OpenAI(api_key="sk-proj-MvtlksTGL6uyHWpkNNBAl3ASWDcNF72AQRh8Q_jy6sI-dzy
 DEBUG = True
 
 # Import base Zdog generator for fallback functionality
-from zdog_generator import generate_zdog_config, get_cubes_to_larger_cube_config
+from .zdog_generator import generate_zdog_config, get_cubes_to_larger_cube_config
 
 # Schema for validating Zdog configurations
 ZDOG_SCENE_SCHEMA = {

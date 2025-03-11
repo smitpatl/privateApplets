@@ -4,13 +4,44 @@ This repository allows non-technical users to create interactive 3D math visuali
 
 ## How It Works
 
-1. Edit the `applet_data.csv` file with your math problem details
-2. Commit your changes to trigger the automatic generation process
-3. The system generates the applet and publishes it to the public repository
+There are two ways to create a new applet:
 
-## Editing the Applet CSV File
+1. **Simple Text Prompt** (Recommended for non-technical users)
+   - Edit the `applet_prompt.txt` file with your math concept and question
+   - Commit your changes to trigger the automatic generation process
+   - The system converts your text into a structured CSV and generates the applet
 
-To create a new applet:
+2. **Direct CSV Editing** (For advanced users)
+   - Edit the `applet_data.csv` file with your math problem details
+   - Commit your changes to trigger the automatic generation process
+
+In both cases, the system generates the applet and publishes it to the public repository.
+
+## Using the Text Prompt Method
+
+The easiest way to create a new applet is by editing the text prompt file:
+
+1. Navigate to the `applet_prompt.txt` file in this repository
+2. Click the pencil icon (Edit this file) on GitHub
+3. Fill in the sections:
+   - **GRADE LEVEL**: Target grade for this content
+   - **CONCEPT**: The mathematical concept being taught
+   - **LEARNING OBJECTIVES**: What students should learn (bullet points)
+   - **QUESTION/PROMPT**: The actual problem text
+   - **HINTS FOR SOLUTION**: Step-by-step hints (bullet points)
+   - **CONNECT QUESTIONS**: Multiple-choice questions with correct/wrong answers
+   - **ADDITIONAL NOTES**: Any extra context for generation
+4. Click "Commit changes" when done
+
+The system will automatically:
+- Process your text prompt
+- Convert it to the required CSV format
+- Generate the interactive applet
+- Deploy it to the public site
+
+## Editing the Applet CSV File (Advanced)
+
+For more control, you can directly edit the CSV:
 
 1. Navigate to the `applet_data.csv` file in this repository
 2. Click the pencil icon (Edit this file) on GitHub

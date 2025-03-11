@@ -1,37 +1,27 @@
 ZDOG APPLET CSV GENERATOR,
 Complete the fields below to generate an applet.,
-title,Math Applet Title Here
-question_text,"Enter your question text here. The openAI integration will automatically extract given and to-find information from this text."
-given_1,"Optional: Add explicit given information here if you want to override automatic extraction"
-given_2,"You can leave this blank and the system will extract information from the question text"
-given_3,
-tofind_1,"Optional: Add explicit to-find information here if you want to override automatic extraction"
-tofind_2,"You can leave this blank and the system will extract information from the question text"
-tofind_3,
-compute_step_1,Step 1: Enter the first step of computation here
-compute_step_2,Step 2: Continue with the next step
-compute_step_3,Step 3: Continue with the solution
-compute_step_4,Step 4: Add more steps as needed
-compute_step_5,Step 5: Present the final answer
+title,Volume Conservation When Challenge
+question_text,A box with dimensions 4 cm × 6 cm × 8 cm is melted down and reformed into a cube. What is the length of each side of the new cube?
+given_1,Calculate the volume of the original box (V = l × w × h)
+given_2,t up an equation where the volume equals the cube of the side length (V = s³)
+given_3,nd the cube root of the volume to determine the side length
+tofind_1,Understand that volume remains constant even when a shape changes
+tofind_2,ply the volume formula for rectangular prisms
+tofind_3,lve multi-step problems involving volume
+compute_step_1,Step 1: Calculate the volume of the original shape
+compute_step_2,Step 2: Calculate the volume of the original box (V = l × w × h)
+compute_step_3,Step 3: t up an equation where the volume equals the cube of the side length (V = s³)
+compute_step_4,Step 4: nd the cube root of the volume to determine the side length
+compute_step_5,
 compute_step_6,
 compute_step_7,
 compute_step_8,
 compute_step_9,
-check_step_1,"Enter first check step for slider position 1-2"
-check_step_2,"Enter second check step for slider position 3-4"
-check_step_3,"Enter third check step for slider position 5-6"
-check_step_4,"Enter fourth check step for slider position 7-8"
-check_step_5,"Enter fifth check step for slider position 9-10"
+check_step_1,Check if the volume of the original shape equals the volume of the new shape
+check_step_2,Verify your calculations by substituting the values
+check_step_3,Consider if your answer makes sense in the context of the problem
+check_step_4,Calculate the surface area of both shapes to observe how it changes
+check_step_5,Try with different numbers to see if the pattern holds
 check_step_6,
-connect_question_1,"Enter your first connect question here"
-connect_option_correct_1_1,Enter the correct answer option
-connect_option_wrong_1_1,Enter an incorrect answer option
-connect_option_wrong_1_2,Enter another incorrect answer option
-connect_option_wrong_1_3,Enter another incorrect answer option
-connect_question_2,"Enter your second connect question here"
-connect_option_correct_2_1,Enter the correct answer option
-connect_option_wrong_2_1,Enter an incorrect answer option
-connect_option_wrong_2_2,Enter another incorrect answer option
-connect_option_wrong_2_3,Enter another incorrect answer option
-visualization_type,"Leave blank for automatic detection"
-visualization_params,"Leave blank for automatic generation"
+visualization_type,
+visualization_params,

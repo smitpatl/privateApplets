@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - 'applet_data.csv'
+      - 'applet_prompt.txt'
   workflow_dispatch:  # Allow manual triggering
 
 jobs:
@@ -44,10 +45,10 @@ jobs:
           # Create directory in public repo if it doesn't exist
           mkdir -p "public-repo/$APPLET_NAME"
           
-          # Copy all generated files to public repo
-          cp -r generated-applet/* "public-repo/$APPLET_NAME/"
+          # Copy the index.html file (not the js directory)
+          cp generated-applet/index.html "public-repo/$APPLET_NAME/"
           
-          # Ensure js directory exists with Zdog library
+          # Ensure js directory exists with Zdog library at the top level
           mkdir -p "public-repo/js"
           if [ ! -f "public-repo/js/zdog.dist.min.js" ]; then
             cp -r js/zdog.dist.min.js "public-repo/js/"
