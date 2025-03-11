@@ -643,18 +643,20 @@ IMPORTANT VISUAL REQUIREMENTS:
     if viz_type == "cubes_to_larger_cube":
         count = viz_params.get("parameters", {}).get("count", 5)
         size = viz_params.get("parameters", {}).get("size", 5)
-        viz_specific_guidance = f"""
-Create scenes showing {count} small cubes with {size} cm sides being transformed into one larger cube.
+        cube_volume = count * (size**3)
+        # Use string concatenation instead of f-string to avoid backslash issues
+        viz_specific_guidance = """
+Create scenes showing """ + str(count) + """ small cubes with """ + str(size) + """ cm sides being transformed into one larger cube.
 - Make this visualization UNIQUE and specific to this problem - NOT generic
 - Use Box elements with wireframe overlays for clear edges
 - Position small cubes in a pattern that's easily counted
 - Make cubes LARGE and PROMINENT in the view (at least 20-30 units in size)
-- Scale all cubes appropriately - small cubes should have dimensions of at least {size * 15} units
+- Scale all cubes appropriately - small cubes should have dimensions of at least """ + str(size * 15) + """ units
 - Create a larger cube with appropriate dimensions scaled similarly
 - Include a transition animation logic in compute_3 scene
 - Show proper dimensions with text labels
-- Compute the correct volume of the larger cube as {count} x {size}^3 = {count * (size**3)} cubic cm
-- Use isometric projection (30° angles) for proper 3D
+- Compute the correct volume of the larger cube as """ + str(count) + """ x """ + str(size) + """^3 = """ + str(cube_volume) + """ cubic cm
+- Use isometric projection (30 degrees angles) for proper 3D
 """
     elif viz_type == "box_height":
         viz_specific_guidance = f"""
