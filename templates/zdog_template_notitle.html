@@ -488,7 +488,7 @@
           <!-- Controls for Zdog -->
           <div class="zdog-controls">
             <button id="resetViewBtn">Reset View</button>
-            <button id="toggleRotationBtn">Toggle Rotation</button>
+            <button id="autoRotateBtn">Auto Rotate</button>
           </div>
           
           <!-- Fallback for browsers without canvas support -->
@@ -601,11 +601,11 @@
       let currentSceneKey = null; // Track current scene key to prevent unnecessary resets
       let lastRotation = { x: -Math.PI/6, y: Math.PI/4, z: 0 }; // Default rotation
       
-      // Make sure toggleRotationBtn text matches initial rotation state when the page loads
+      // Make sure autoRotateBtn text matches initial rotation state when the page loads
       document.addEventListener('DOMContentLoaded', () => {
-        const toggleRotationBtn = document.getElementById('toggleRotationBtn');
-        if (toggleRotationBtn) {
-          toggleRotationBtn.textContent = isSpinning ? 'Stop Rotation' : 'Toggle Rotation';
+        const autoRotateBtn = document.getElementById('autoRotateBtn');
+        if (autoRotateBtn) {
+          autoRotateBtn.textContent = isSpinning ? 'Stop Rotation' : 'Auto Rotate';
         }
       });
       
