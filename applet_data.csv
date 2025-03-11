@@ -1,6 +1,6 @@
 ZDOG APPLET CSV GENERATOR,
 Complete the fields below to generate an applet.,
-title,Aquarium Capacity
+title,Aquarium Volume
 question_text,"An aquarium tank is 60 cm long, 30 cm wide, and 45 cm high. If water fills 80% of the tank's volume, how many liters of water are in the tank? (Note: 1 liter = 1000 cubic centimeters)"
 given_1,Calculate the total volume of the aquarium in cubic centimeters (V = l × w × h)
 given_2,Find 80% of the total volume
