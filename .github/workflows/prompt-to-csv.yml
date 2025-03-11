@@ -1,0 +1,41 @@
+name: Prompt to CSV Conversion
+
+on:
+  push:
+    paths:
+      - 'applet_prompt.txt'
+  workflow_dispatch:  # Allow manual triggering
+
+jobs:
+  convert-prompt:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout private repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Fetch all history for proper git diff
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install openai jsonschema
+      
+      - name: Convert prompt to CSV
+        run: |
+          echo "Converting prompt file to CSV..."
+          python prompt_to_csv.py
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add applet_data.csv
+          git commit -m "Update CSV from prompt file via GitHub Actions" || echo "No changes to commit"
+          git push
