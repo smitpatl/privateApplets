@@ -1,19 +1,18 @@
-Sarah has 3 boxes of crayons. Each box contains 15 crayons. She decides to give the same number of crayons to each of her 5 friends. How many crayons does each friend get?
+Tom has a rectangular garden that measures 8 meters in length and 6 meters in width. He wants to put a fence around the entire garden. How many meters of fencing does Tom need?
 
 Hint:
 
-First, find out how many crayons Sarah has in total.
-Then, divide that number by the number of friends she is giving them to.
+Find the perimeter of the rectangle, which is the total distance around the garden.
 Solution:
 
-Calculate the total number of crayons:
+Use the formula for the perimeter of a rectangle:
 [
-3 \text{ boxes} \times 15 \text{ crayons per box} = 45 \text{ crayons}
+\text{Perimeter} = 2 \times (\text{Length} + \text{Width})
 ]
 
-Divide the total number of crayons by the number of friends:
+Substitute the given values:
 [
-\frac{45 \text{ crayons}}{5 \text{ friends}} = 9 \text{ crayons per friend}
+\text{Perimeter} = 2 \times (8 \text{ meters} + 6 \text{ meters}) = 2 \times 14 \text{ meters} = 28 \text{ meters}
 ]
 
-Therefore, each friend gets 9 crayons
+Tom needs 28 meters of fencing to go around his garden.
