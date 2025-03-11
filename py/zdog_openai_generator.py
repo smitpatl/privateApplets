@@ -104,7 +104,7 @@ Return ONLY a JSON object with 'given' and 'tofind' arrays."""
         json_response = response.choices[0].message.content.strip()
         
         if DEBUG:
-            print(f"OpenAI API response for spans extraction: {json_response[:300]}...")
+            print("OpenAI API response for spans extraction: " + str(json_response[:300]) + "...")
             
         # Handle case where response might include markdown code block
         if "```json" in json_response:
@@ -537,8 +537,8 @@ def generate_zdog_scenes_with_api(visualization_text, viz_params, api_key=None):
     if DEBUG:
         print("Preparing API call for Zdog scene generation...")
         
-    # Create a comprehensive system prompt with explicit structure requirements
-    system_prompt = """You are a 3D graphics expert specializing in converting mathematical problems into Zdog scene configurations.
+    # Create a comprehensive system prompt with explicit structure requirements - using a raw string to avoid f-string issues
+    system_prompt = r"""You are a 3D graphics expert specializing in converting mathematical problems into Zdog scene configurations.
 Your task is to create UNIQUE Zdog scenes that visualize mathematical concepts for educational purposes.
 Each visualization should be customized specifically for the individual problem, NOT a generic template.
 

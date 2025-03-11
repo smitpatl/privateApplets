@@ -1,17 +1,17 @@
 ZDOG APPLET CSV GENERATOR,
 Complete the fields below to generate an applet.,
-title,Volume Conservation When Challenge
-question_text,A box with dimensions 4 cm × 6 cm × 8 cm is melted down and reformed into a cube. What is the length of each side of the new cube?
-given_1,Calculate the volume of the original box (V = l × w × h)
-given_2,t up an equation where the volume equals the cube of the side length (V = s³)
-given_3,nd the cube root of the volume to determine the side length
-tofind_1,Understand that volume remains constant even when a shape changes
-tofind_2,ply the volume formula for rectangular prisms
-tofind_3,lve multi-step problems involving volume
+title,Measurement Conversion Volume Challenge
+question_text,"An aquarium tank is 60 cm long, 30 cm wide, and 45 cm high. If water fills 80% of the tank's volume, how many liters of water are in the tank? (Note: 1 liter = 1000 cubic centimeters)"
+given_1,Calculate the total volume of the aquarium in cubic centimeters (V = l × w × h)
+given_2,nd 80% of the total volume
+given_3,nvert the volume from cubic centimeters to liters
+tofind_1,Understand how to convert between different units of volume
+tofind_2,ply volume formulas to solve real-world problems
+tofind_3,sualize how liquid volume transforms between different containers
 compute_step_1,Step 1: Calculate the volume of the original shape
-compute_step_2,Step 2: Calculate the volume of the original box (V = l × w × h)
-compute_step_3,Step 3: t up an equation where the volume equals the cube of the side length (V = s³)
-compute_step_4,Step 4: nd the cube root of the volume to determine the side length
+compute_step_2,Step 2: Calculate the total volume of the aquarium in cubic centimeters (V = l × w × h)
+compute_step_3,Step 3: nd 80% of the total volume
+compute_step_4,Step 4: nvert the volume from cubic centimeters to liters
 compute_step_5,
 compute_step_6,
 compute_step_7,
