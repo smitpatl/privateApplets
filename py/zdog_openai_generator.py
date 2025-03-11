@@ -22,8 +22,8 @@ from openai import OpenAI
 import jsonschema
 from pathlib import Path
 
-# Initialize OpenAI client
-client = OpenAI(api_key="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")
+# Initialize OpenAI client - use environment variable when API key is needed
+client = None
 
 # Enable more verbose debugging
 DEBUG = True
@@ -54,8 +54,15 @@ ZDOG_SCENE_SCHEMA = {
 
 def extract_spans_with_openai(question_text, api_key=None):
     """Extract given and to-find spans from the question text using OpenAI."""
-    # Update client if api_key is provided
-    openai_client = OpenAI(api_key=api_key) if api_key else client
+    # When running in GitHub Actions, OPENAI_API_KEY will be set in environment
+    # If api_key is directly provided, use it, otherwise get from environment
+    if not api_key:
+        api_key = os.environ.get("OPENAI_API_KEY")
+        if not api_key:
+            print("Warning: No OPENAI_API_KEY found in environment variables. This is required for GitHub Actions.")
+    
+    # Create client with the API key
+    openai_client = OpenAI(api_key=api_key)
     
     try:
         if DEBUG:
@@ -211,8 +218,15 @@ def extract_visualization_text(csv_content, api_key=None):
 
 def extract_parameters_with_openai(problem_text, api_key=None):
     """Extract visualization parameters from problem text using OpenAI."""
-    # Update client if api_key is provided
-    openai_client = OpenAI(api_key=api_key) if api_key else client
+    # When running in GitHub Actions, OPENAI_API_KEY will be set in environment
+    # If api_key is directly provided, use it, otherwise get from environment
+    if not api_key:
+        api_key = os.environ.get("OPENAI_API_KEY")
+        if not api_key:
+            print("Warning: No OPENAI_API_KEY found in environment variables. This is required for GitHub Actions.")
+    
+    # Create client with the API key
+    openai_client = OpenAI(api_key=api_key)
     
     try:
         if DEBUG:
@@ -420,8 +434,15 @@ def generate_zdog_scenes_with_openai(visualization_text, api_key=None):
 
 def enhance_template_with_openai(visualization_text, viz_params, template_config, api_key=None):
     """Enhance a template-based Zdog configuration using OpenAI."""
-    # Update client if api_key is provided
-    openai_client = OpenAI(api_key=api_key) if api_key else client
+    # When running in GitHub Actions, OPENAI_API_KEY will be set in environment
+    # If api_key is directly provided, use it, otherwise get from environment
+    if not api_key:
+        api_key = os.environ.get("OPENAI_API_KEY")
+        if not api_key:
+            print("Warning: No OPENAI_API_KEY found in environment variables. This is required for GitHub Actions.")
+    
+    # Create client with the API key
+    openai_client = OpenAI(api_key=api_key)
     
     if DEBUG:
         print("Preparing API call for Zdog scene enhancement...")
@@ -531,8 +552,15 @@ Return ONLY the enhanced valid JSON configuration with no explanation.
 
 def generate_zdog_scenes_with_api(visualization_text, viz_params, api_key=None):
     """Generate unique Zdog scenes using OpenAI API with extensive context from the problem."""
-    # Update client if api_key is provided
-    openai_client = OpenAI(api_key=api_key) if api_key else client
+    # When running in GitHub Actions, OPENAI_API_KEY will be set in environment
+    # If api_key is directly provided, use it, otherwise get from environment
+    if not api_key:
+        api_key = os.environ.get("OPENAI_API_KEY")
+        if not api_key:
+            print("Warning: No OPENAI_API_KEY found in environment variables. This is required for GitHub Actions.")
+    
+    # Create client with the API key
+    openai_client = OpenAI(api_key=api_key)
     
     if DEBUG:
         print("Preparing API call for Zdog scene generation...")

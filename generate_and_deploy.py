@@ -110,11 +110,10 @@ def main():
     
     # Generate applet using the zdog_openai_applet_generator
     try:
-        # Get OpenAI API key from environment
+        # Get OpenAI API key from environment - this will be set by GitHub Actions
         api_key = os.environ.get('OPENAI_API_KEY')
         if not api_key:
-            print("Warning: OPENAI_API_KEY environment variable not set")
-            api_key = None
+            print("Warning: OPENAI_API_KEY environment variable not set. This is required for GitHub Actions.")
         
         # Generate the applet
         output_file = os.path.join(OUTPUT_DIR, "index.html")

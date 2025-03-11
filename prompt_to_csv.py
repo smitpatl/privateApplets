@@ -26,7 +26,6 @@ except ImportError:
 # Constants
 PROMPT_PATH = "applet_prompt.txt"
 CSV_PATH = "applet_data.csv"
-API_KEY = os.environ.get("OPENAI_API_KEY")
 
 def read_prompt_file(file_path):
     """Read the prompt file and return its content."""
@@ -131,10 +130,136 @@ def parse_prompt_sections(content):
     
     return sections
 
+def generate_connect_questions_with_openai(question, compute_steps, api_key=None):
+    """Generate connect questions using OpenAI if none are provided."""
+    # When running in GitHub Actions, the API key is set as an environment variable
+    if not api_key:
+        api_key = os.environ.get("OPENAI_API_KEY")
+        
+    if not api_key:
+        print("Warning: No OPENAI_API_KEY found in environment variables. Using default connect questions.")
+        return [
+            {
+                'question': "Which formula should you use to solve this problem?",
+                'options': [
+                    {'text': "The correct formula based on the problem context", 'correct': True},
+                    {'text': "An incorrect formula that seems plausible", 'correct': False},
+                    {'text': "A formula from a different mathematical concept", 'correct': False},
+                    {'text': "No formula is needed for this problem", 'correct': False}
+                ]
+            },
+            {
+                'question': "What is the first step in solving this problem?",
+                'options': [
+                    {'text': "The correct first step for this problem", 'correct': True},
+                    {'text': "A step that should come later in the solution", 'correct': False},
+                    {'text': "An unnecessary step that doesn't help solve the problem", 'correct': False},
+                    {'text': "A step that would lead to an incorrect solution", 'correct': False}
+                ]
+            }
+        ]
+    
+    try:
+        client = OpenAI(api_key=api_key)
+        
+        prompt = f"""
+Create 2 multiple-choice connect questions for this 5th grade math problem:
+
+PROBLEM:
+{question}
+
+SOLUTION:
+{' '.join(compute_steps)}
+
+Each connect question should test the student's conceptual understanding, not just calculation ability.
+For each question, provide 1 correct answer and 3 wrong answers that are plausible but incorrect.
+
+Format your response as valid JSON with this structure:
+[
+  {{
+    "question": "Question text here?",
+    "options": [
+      {{"text": "Correct answer here", "correct": true}},
+      {{"text": "Wrong answer 1", "correct": false}},
+      {{"text": "Wrong answer 2", "correct": false}},
+      {{"text": "Wrong answer 3", "correct": false}}
+    ]
+  }},
+  // Second question with same structure
+]
+
+The questions should be specific to the mathematical concepts in this problem.
+"""
+        
+        response = client.chat.completions.create(
+            model="gpt-4o-2024-08-06",
+            messages=[
+                {"role": "system", "content": "You are a 5th grade math teacher creating conceptual multiple-choice questions."},
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0.7,
+            max_tokens=1000
+        )
+        
+        # Extract and parse JSON response
+        json_text = response.choices[0].message.content.strip()
+        
+        # Handle case where response might include markdown code block
+        if "```json" in json_text:
+            json_text = re.search(r'```json(.*?)```', json_text, re.DOTALL).group(1).strip()
+        elif "```" in json_text:
+            json_text = re.search(r'```(.*?)```', json_text, re.DOTALL).group(1).strip()
+        
+        connect_questions = json.loads(json_text)
+        
+        # Ensure we have at least 2 connect questions
+        if len(connect_questions) < 2:
+            default_question = {
+                'question': "What concept does this problem test?",
+                'options': [
+                    {'text': "The correct mathematical concept", 'correct': True},
+                    {'text': "A related but incorrect concept", 'correct': False},
+                    {'text': "An unrelated mathematical concept", 'correct': False},
+                    {'text': "This problem doesn't test any specific concept", 'correct': False}
+                ]
+            }
+            while len(connect_questions) < 2:
+                connect_questions.append(default_question)
+        
+        return connect_questions[:2]  # Limit to 2 questions
+        
+    except Exception as e:
+        print(f"Error generating connect questions with OpenAI: {e}")
+        # Fallback to basic connect questions
+        return [
+            {
+                'question': "Which formula should you use to solve this problem?",
+                'options': [
+                    {'text': "The correct formula based on the problem context", 'correct': True},
+                    {'text': "An incorrect formula that seems plausible", 'correct': False},
+                    {'text': "A formula from a different mathematical concept", 'correct': False},
+                    {'text': "No formula is needed for this problem", 'correct': False}
+                ]
+            },
+            {
+                'question': "What is the first step in solving this problem?",
+                'options': [
+                    {'text': "The correct first step for this problem", 'correct': True},
+                    {'text': "A step that should come later in the solution", 'correct': False},
+                    {'text': "An unnecessary step that doesn't help solve the problem", 'correct': False},
+                    {'text': "A step that would lead to an incorrect solution", 'correct': False}
+                ]
+            }
+        ]
+
 def generate_compute_steps_with_openai(question, hints, api_key=None):
     """Generate compute steps using OpenAI."""
+    # When running in GitHub Actions, the API key is set as an environment variable
     if not api_key:
-        print("Warning: No OpenAI API key provided. Using default compute steps.")
+        api_key = os.environ.get("OPENAI_API_KEY")
+        
+    if not api_key:
+        print("Warning: No OPENAI_API_KEY found in environment variables. Using default compute steps.")
         # Return some default steps based on hints
         steps = []
         steps.append("Step 1: Calculate the volume of the original shape")
@@ -152,11 +277,14 @@ PROBLEM:
 {question}
 
 SOLUTION HINTS:
-{', '.join(hints)}
+{', '.join(hints) if hints else "Identify what's given, set up the appropriate equation, and solve step-by-step."}
 
 Format your response as a numbered list of computation steps, starting from identifying what's given,
-and proceeding through each calculation to the final answer. Each step should be clear enough for a 5th grader
-to understand. Return ONLY the numbered steps, no explanations or other text.
+and proceeding through each calculation to the final answer. Include at least 6-8 detailed steps.
+Each step should be clear enough for a 5th grader to understand.
+
+Make sure to break down the solution into many small steps rather than combining multiple calculations into one step.
+Return ONLY the numbered steps, no explanations or other text.
 
 Example format:
 Step 1: Identify what is given...
@@ -207,8 +335,12 @@ etc.
 
 def generate_check_steps_with_openai(question, compute_steps, api_key=None):
     """Generate check steps using OpenAI."""
+    # When running in GitHub Actions, the API key is set as an environment variable
     if not api_key:
-        print("Warning: No OpenAI API key provided. Using default check steps.")
+        api_key = os.environ.get("OPENAI_API_KEY")
+        
+    if not api_key:
+        print("Warning: No OPENAI_API_KEY found in environment variables. Using default check steps.")
         return [
             "Check if the volume of the original shape equals the volume of the new shape",
             "Verify your calculations by substituting the values",
@@ -288,8 +420,12 @@ Return ONLY the 5 numbered check steps, no other text.
 
 def generate_title_with_openai(concept, question, api_key=None):
     """Generate a title for the applet using OpenAI."""
+    # When running in GitHub Actions, the API key is set as an environment variable
     if not api_key:
-        print("Warning: No OpenAI API key provided. Using default title.")
+        api_key = os.environ.get("OPENAI_API_KEY")
+        
+    if not api_key:
+        print("Warning: No OPENAI_API_KEY found in environment variables. Using default title.")
         # Extract key words from concept and question
         words = re.findall(r'\b\w+\b', concept + " " + question)
         important_words = [word for word in words if len(word) > 3 and word.lower() not in ('with', 'what', 'that', 'this', 'from', 'have', 'been')]
@@ -339,14 +475,33 @@ Return ONLY the title, nothing else.
 
 def create_csv_content(sections, api_key=None):
     """Create the CSV content from the parsed sections."""
+    print("Generating title...")
     # Generate a title
     title = generate_title_with_openai(sections['concept'], sections['question'], api_key)
     
+    print("Generating compute steps...")
     # Generate compute steps
     compute_steps = generate_compute_steps_with_openai(sections['question'], sections['hints'], api_key)
     
+    print("Generating check steps...")
     # Generate check steps
     check_steps = generate_check_steps_with_openai(sections['question'], compute_steps, api_key)
+    
+    # If no connect questions were provided, generate them
+    if not sections['connect_questions'] or len(sections['connect_questions']) < 2:
+        print("No connect questions provided. Generating them with OpenAI...")
+        ai_connect_questions = generate_connect_questions_with_openai(sections['question'], compute_steps, api_key)
+        # If we have some provided questions, add the AI-generated ones to fill the gaps
+        if sections['connect_questions']:
+            # Append AI questions until we have at least 2
+            for q in ai_connect_questions:
+                if len(sections['connect_questions']) < 2:
+                    sections['connect_questions'].append(q)
+                else:
+                    break
+        else:
+            # Use all AI-generated questions
+            sections['connect_questions'] = ai_connect_questions
     
     # Create CSV rows
     rows = [
@@ -370,47 +525,61 @@ def create_csv_content(sections, api_key=None):
         else:
             rows.append([f"tofind_{i}", ""])
     
-    # Add compute steps
+    # Add compute steps - ensure we have at least 6 steps
     for i in range(1, 10):
         if i-1 < len(compute_steps):
             rows.append([f"compute_step_{i}", compute_steps[i-1]])
         else:
-            rows.append([f"compute_step_{i}", ""])
+            # For steps 1-6, add placeholders if needed
+            if i <= 6:
+                rows.append([f"compute_step_{i}", f"Step {i}: Perform the required calculation for this step"])
+            else:
+                rows.append([f"compute_step_{i}", ""])
     
-    # Add check steps
+    # Add check steps - ensure we have all 5 steps filled
     for i in range(1, 7):
         if i-1 < len(check_steps):
             rows.append([f"check_step_{i}", check_steps[i-1]])
         else:
-            rows.append([f"check_step_{i}", ""])
+            # Add placeholder for the 5 main steps
+            if i <= 5:
+                rows.append([f"check_step_{i}", f"Check step {i}: Verify your work by examining this aspect"])
+            else:
+                rows.append([f"check_step_{i}", ""])
     
-    # Add connect questions
-    for i, q in enumerate(sections['connect_questions'], 1):
-        if i > 2:  # Limit to 2 questions
-            break
-        
-        rows.append([f"connect_question_{i}", q['question']])
-        
-        # Add options
-        correct_added = False
-        wrong_count = 0
-        
-        for option in q['options']:
-            if option['correct'] and not correct_added:
-                rows.append([f"connect_option_correct_{i}_1", option['text']])
-                correct_added = True
-            elif not option['correct'] and wrong_count < 3:
+    # Add connect questions - we should have at least 2 by this point
+    for i in range(1, 3):  # Always add exactly 2 questions
+        if i-1 < len(sections['connect_questions']):
+            q = sections['connect_questions'][i-1]
+            rows.append([f"connect_question_{i}", q['question']])
+            
+            # Add options
+            correct_added = False
+            wrong_count = 0
+            
+            for option in q['options']:
+                if option['correct'] and not correct_added:
+                    rows.append([f"connect_option_correct_{i}_1", option['text']])
+                    correct_added = True
+                elif not option['correct'] and wrong_count < 3:
+                    wrong_count += 1
+                    rows.append([f"connect_option_wrong_{i}_{wrong_count}", option['text']])
+            
+            # Add default correct option if none specified
+            if not correct_added:
+                rows.append([f"connect_option_correct_{i}_1", "The correct answer"])
+            
+            # Fill in remaining wrong options
+            while wrong_count < 3:
                 wrong_count += 1
-                rows.append([f"connect_option_wrong_{i}_{wrong_count}", option['text']])
-        
-        # Add default correct option if none specified
-        if not correct_added:
-            rows.append([f"connect_option_correct_{i}_1", "The correct answer"])
-        
-        # Fill in remaining wrong options
-        while wrong_count < 3:
-            wrong_count += 1
-            rows.append([f"connect_option_wrong_{i}_{wrong_count}", f"Incorrect option {wrong_count}"])
+                rows.append([f"connect_option_wrong_{i}_{wrong_count}", f"Incorrect option {wrong_count}"])
+        else:
+            # This should not happen since we now generate questions, but just in case
+            rows.append([f"connect_question_{i}", f"Question {i}: What concept is being tested in this problem?"])
+            rows.append([f"connect_option_correct_{i}_1", "The correct concept for this problem"])
+            rows.append([f"connect_option_wrong_{i}_1", "An incorrect but related concept"])
+            rows.append([f"connect_option_wrong_{i}_2", "A different mathematical concept"])
+            rows.append([f"connect_option_wrong_{i}_3", "None of the above"])
     
     # Add visualization parameters (let OpenAI generate these)
     rows.append(["visualization_type", ""])
@@ -434,10 +603,10 @@ def main():
     """Main function to process the prompt file and generate the CSV."""
     print("Starting prompt to CSV conversion...")
     
-    # Get the API key from environment variable
+    # Get the API key from environment variable - for GitHub Actions this will be automatically set
     api_key = os.environ.get("OPENAI_API_KEY")
     if not api_key:
-        print("Warning: OPENAI_API_KEY environment variable not set")
+        print("Warning: OPENAI_API_KEY environment variable not set. This is required for GitHub Actions.")
     
     # Read the prompt file
     prompt_content = read_prompt_file(PROMPT_PATH)
