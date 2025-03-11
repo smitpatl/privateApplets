@@ -6,7 +6,7 @@ This repository allows non-technical users to create interactive 3D math visuali
 
 There are two ways to create a new applet:
 
-1. **Simple Text Prompt** (Recommended for non-technical users)
+1. **Simple Text Prompt** (For non-technical users) (Under Construction)
    - Edit the `applet_prompt.txt` file with your math concept and question
    - Commit your changes to trigger the automatic generation process
    - The system converts your text into a structured CSV and generates the applet
