@@ -23,10 +23,22 @@ check_step_3,"Check: 81,000 × 0.8 = 64,800 cm³"
 check_step_4,"Check: 64,800 ÷ 1000 = 64.8 liters"
 check_step_5,Consider if your answer makes sense in the context of the problem
 check_step_6,
-connect_step_1,First calculate the total volume of the tank using the dimensions
-connect_step_2,"Since the water fills only 80% of the tank, multiply the total volume by 0.8"
-connect_step_3,Convert from cubic centimeters to liters by dividing by 1000
-connect_step_4,The final answer represents the actual volume of water in standard units
-connect_step_5,
+connect_question_1,How do you find the total volume of the rectangular tank?
+connect_option_correct_1_1,Multiply length × width × height using the formula V = l × w × h
+connect_option_wrong_1_1,Add the length + width + height
+connect_option_wrong_1_2,Multiply length × width to find the area
+connect_option_wrong_1_3,Multiply 2 × (length + width + height)
+
+connect_question_2,How do you find 80% of the total volume?
+connect_option_correct_2_1,Multiply the total volume by 0.8
+connect_option_wrong_2_1,Divide the total volume by 80
+connect_option_wrong_2_2,Subtract 80 from the total volume
+connect_option_wrong_2_3,Divide the total volume by 0.8
+
+connect_question_3,How do you convert from cubic centimeters to liters?
+connect_option_correct_3_1,Divide the volume in cubic centimeters by 1000
+connect_option_wrong_3_1,Multiply the volume in cubic centimeters by 1000
+connect_option_wrong_3_2,Divide the volume in cubic centimeters by 100
+connect_option_wrong_3_3,Convert each dimension to meters and then multiply
 visualization_type,
 visualization_params,
