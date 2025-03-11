@@ -629,8 +629,8 @@ IMPORTANT VISUAL REQUIREMENTS:
     if connect_questions:
         connect_text = "Connect Questions:\n"
         for i, q in enumerate(connect_questions):
-            connect_text += f"{i+1}. {q.get('question', '')}\n"
-            connect_text += f"   Correct: {q.get('correct', '')}\n"
+            connect_text += str(i+1) + ". " + q.get('question', '') + "\n"
+            connect_text += "   Correct: " + q.get('correct', '') + "\n"
     
     # Extract final answer if available
     final_answer = visualization_text.get('check', {}).get('final_answer', '')
@@ -653,7 +653,7 @@ Create scenes showing {count} small cubes with {size} cm sides being transformed
 - Create a larger cube with appropriate dimensions scaled similarly
 - Include a transition animation logic in compute_3 scene
 - Show proper dimensions with text labels
-- Compute the correct volume of the larger cube as {count}×{size}³ = {count * (size**3)} cm³
+- Compute the correct volume of the larger cube as {count} x {size}^3 = {count * (size**3)} cubic cm
 - Use isometric projection (30° angles) for proper 3D
 """
     elif viz_type == "box_height":
