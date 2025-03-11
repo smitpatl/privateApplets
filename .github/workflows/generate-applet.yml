@@ -1,0 +1,66 @@
+name: Generate and Deploy Applet
+
+on:
+  push:
+    paths:
+      - 'applet_data.csv'
+  workflow_dispatch:  # Allow manual triggering
+
+jobs:
+  generate-applet:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout private repository
+        uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install openai jsonschema
+      
+      - name: Generate applet
+        run: python generate_and_deploy.py
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      
+      - name: Checkout public repository
+        uses: actions/checkout@v3
+        with:
+          repository: 'smitpatl/publicApplets'  # Replace with your GitHub username/repo
+          token: ${{ secrets.GH_PAT }}
+          path: public-repo
+      
+      - name: Copy generated files to public repository
+        run: |
+          # Get the applet name from generate_and_deploy.py output
+          APPLET_NAME=$(cat applet_name.txt)
+          echo "Deploying applet: $APPLET_NAME"
+          
+          # Create directory in public repo if it doesn't exist
+          mkdir -p "public-repo/$APPLET_NAME"
+          
+          # Copy all generated files to public repo
+          cp -r generated-applet/* "public-repo/$APPLET_NAME/"
+          
+          # Ensure js directory exists with Zdog library
+          mkdir -p "public-repo/js"
+          if [ ! -f "public-repo/js/zdog.dist.min.js" ]; then
+            cp -r js/zdog.dist.min.js "public-repo/js/"
+          fi
+          
+          # Update index page
+          python update_index.py "public-repo"
+      
+      - name: Commit and push to public repository
+        run: |
+          cd public-repo
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git commit -m "Add or update applet via GitHub Actions"
+          git push
