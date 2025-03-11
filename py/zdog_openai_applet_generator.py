@@ -98,8 +98,8 @@ def generate_zdog_openai_applet(csv_file, output_file=None, api_key=None):
     def process_json(items):
         # First, convert to JSON string
         json_str = json.dumps(items)
-        # Then escape backslashes again for proper JS string embedding
-        return json_str.replace('\\', '\\\\')
+        # Then escape backslashes again for proper JS string embedding - using string concatenation to avoid f-string issues
+        return json_str.replace('\\', '\\' + '\\')
     
     # Replace JSON data
     html = html.replace('{{given_items}}', process_json(given_items))
