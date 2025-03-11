@@ -32,4 +32,4 @@ CONNECT QUESTIONS:
    WRONG: 10000 cubic centimeters
 
 ADDITIONAL NOTES:
-This problem helps students understand volume measurement in the context of a real-world scenario. The visualization should show the aquarium tank with water filling 80% of its volume, with clear dimensions labeled. Including a visual representation of the conversion between cubic centimeters and liters would reinforce the relationship between these units. Consider showing both the empty tank and the partially filled tank to help students visualize the concept of partial volume
+This problem helps students understand volume measurement in the context of a real-world scenario. The visualization should show the aquarium tank with water filling 80% of its volume, with clear dimensions labeled. Including a visual representation of the conversion between cubic centimeters and liters would reinforce the relationship between these units. Consider showing both the empty tank and the partially filled tank to help students visualize the concept of partial volume.
