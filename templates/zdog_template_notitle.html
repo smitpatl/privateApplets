@@ -622,12 +622,22 @@
           cancelAnimationFrame(currentScene.animation);
         }
         
-        // Create new Illustration with isometric projection settings and drag disabled
+        // Set global visualization settings from zdogSceneData if available
+        const globalSettings = zdogSceneData.global || {};
+        
+        // Create new Illustration with isometric projection and Box Dimensions style:
+        // - No drag interaction allowed
+        // - Isometric view
+        // - Initial rotation false (start with no rotation)
+        // - Toggle rotation via button
         const illo = new Zdog.Illustration({
           element: zdogCanvas,
           dragRotate: false, // Disable mouse interaction 
           // Use saved rotation if available, otherwise use default isometric rotation
           rotate: { ...lastRotation }, // Apply the last known rotation
+          zoom: globalSettings.zoom || 1.2,
+          // Use provided background color or default
+          background: globalSettings.backgroundColor || '#f0f0f0',
         });
         
         // Load the scene configuration

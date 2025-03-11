@@ -716,19 +716,26 @@ Create scenes specific to the \"""" + viz_type + """\" visualization type.
 """
     
     # Prepare user prompt with comprehensive context from the problem
+    # Create given and to-find items strings safely
+    given_items_str = "\n".join([f"- {item}" for item in given_items])
+    tofind_items_str = "\n".join([f"- {item}" for item in tofind_items])
+    solution_steps_str = "\n".join([f"{i+1}. {step}" for i, step in enumerate(compute_steps)])
+    params_str = json.dumps(viz_params.get("parameters", {}), indent=2)
+    
+    # Create user prompt using regular string concatenation to avoid f-string with backslashes
     user_prompt = f"""Create a completely UNIQUE and CUSTOM Zdog 3D scene configuration to visualize this specific mathematical problem:
 
 COMPLETE PROBLEM CONTEXT:
 Question: {question_text}
 
 Given Items:
-{"\n".join([f"- {item}" for item in given_items])}
+{given_items_str}
 
 To Find Items:
-{"\n".join([f"- {item}" for item in tofind_items])}
+{tofind_items_str}
 
 Solution Steps:
-{"\n".join([f"{i+1}. {step}" for i, step in enumerate(compute_steps)])}
+{solution_steps_str}
 
 {connect_text}
 
@@ -737,7 +744,7 @@ Final Answer: {final_answer}
 VISUALIZATION TYPE: {viz_type}
 
 PARAMETERS:
-{json.dumps(viz_params.get("parameters", {}), indent=2)}
+{params_str}
 
 {viz_specific_guidance}
 
