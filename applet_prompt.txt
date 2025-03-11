@@ -4,4 +4,4 @@ In the process of constructing this display:
 1. First determine how many small cubes will fit along each edge of the large cube.
 2. Calculate the total number of small cubes needed to fill the entire volume of the large cube.
 3. Verify the result by checking that the volume of all small cubes equals the volume of the large cube.
-4. Determine what fraction of the total volume each small cube represents.
+4. Determine what fraction of the total volume each small cube represents!
